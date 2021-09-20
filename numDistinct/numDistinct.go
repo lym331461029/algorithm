@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 //115. 不同的子序列
 //给定一个字符串 s 和一个字符串 t ，计算在 s 的子序列中 t 出现的个数。
 //
@@ -39,24 +41,34 @@ func numDistinct(s string, t string) int {
 		return 0
 	}
 
-	dp := make([][]int, sLen, sLen)
-	for i := 0; i < sLen; i++ {
-		dp[i] = make([]int, tLen, tLen)
+	dp := make([][]int, sLen+1, sLen+1)
+	for i := 0; i < sLen+1; i++ {
+		dp[i] = make([]int, tLen+1, tLen+1)
 	}
 
-	for i := 0; i < sLen; i++ {
-		dp[i][tLen-1] = 1
+	for i := 0; i < sLen+1; i++ {
+		dp[i][tLen] = 1
 	}
 
-	for j := 0; j < tLen-1; j++ {
-		dp[sLen-1][j] = 0
+	for j := 0; j < tLen; j++ {
+		dp[sLen][j] = 0
 	}
 
-	for i := sLen - 2; i >= 0 {
-
+	for i := sLen - 1; i >= 0; i-- {
+		for j := tLen - 1; j >= 0; j-- {
+			if s[i] == t[j] {
+				dp[i][j] = dp[i+1][j] + dp[i+1][j+1]
+			} else {
+				dp[i][j] = dp[i+1][j]
+			}
+		}
 	}
+	return dp[0][0]
 }
 
 func main() {
-
+	s := "rabbbit"
+	t := "rabbit"
+	x := numDistinct(s,t)
+	fmt.Println(x)
 }
